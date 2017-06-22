@@ -6,6 +6,9 @@ from pysacct.settings import VALID_SACCT_FIELDS
 
 
 def validate_fields(obj, **kwargs):
+    """Validates that fields are within
+    those defind by ``VALID_SACCT_FIELDS``
+    """
     for key, value in kwargs.items():
         if key.lower() not in (field.lower() for field in
                                VALID_SACCT_FIELDS):
@@ -18,29 +21,9 @@ def validate_fields(obj, **kwargs):
         setattr(obj, key.lower(), value)
 
 
-'''
-class Step(object):
-    """An object presentation of a single sacct line which requires
-    kwargs following the same format as `sacct -P`"""
-
-    def __init__(self, **kwargs):
-        validate_fields(self, **kwargs)
-
-    def __repr__(self):
-        return '<Step: %s>' % self.jobid
-
-    def __str__(self):
-        return '<Step: %s>' % self.jobid
-
-    def to_JSON(self):
-        return json.dumps(self.__dict__)
-
-'''
-
-
 class Job(object):
     """
-    Object representation of a SLURM job, with any steps as `Job.jobsteps`.
+    Object representation of a SLURM job, with any steps as ``Job.jobsteps``.
     Can be created from kwargs or dict passed as kwargs.
     """
 
@@ -85,6 +68,7 @@ class Job(object):
 
     @jobsteps.setter
     def jobsteps(self, value):
+        """Value must be a list of Job objects with matching JobID"""
         if not isinstance(value, list):
             raise TypeError("Jobsteps must be of type list")
         for item in value:
