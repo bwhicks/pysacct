@@ -26,7 +26,7 @@ Testing
 -------
 The unit tests, such as they are with such a minimal framework, can be run
 after ``pip install -r dev-requirements.txt`` by simply typing ``pytest`` from
-the repository route (or ``python -m pytest`` if for some reason your install of
+the repository root (or ``python -m pytest`` if for some reason your install of
 Python doesn't add ``pytest`` to your ``PATH`` variable.)
 
 Goals
