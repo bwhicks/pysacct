@@ -2,25 +2,7 @@
 Models to represent SLURM jobs from sacct in a groovy Pythonic way.
 """
 import json
-
-VALID_SACCT_FIELDS = [
-    'Account', 'AdminComment', 'AllocCPUS', 'AllocGRES', 'AllocNodes',
-    'AllocTRES', 'AssocID', 'AveCPU', 'AveCPUFreq', 'AveDiskRead',
-    'AveDiskWrite', 'AvePages', 'AveRSS', 'AveVMSize', 'BlockID', 'Cluster',
-    'Comment', 'ConsumedEnergy', 'ConsumedEnergyRaw', 'CPUTime', 'CPUTimeRAW',
-    'DerivedExitCode', 'Elapsed', 'ElapsedRaw', 'Eligible', 'End', 'ExitCode',
-    'GID', 'Group', 'JobID', 'JobIDRaw', 'JobName', 'Layout', 'MaxDiskRead',
-    'MaxDiskReadNode', 'MaxDiskReadTask', 'MaxDiskWrite', 'MaxDiskWriteNode',
-    'MaxDiskWriteTask', 'MaxPages', 'MaxPagesNode', 'MaxPagesTask', 'MaxRSS',
-    'MaxRSSNode', 'MaxRSSTask', 'MaxVMSize', 'MaxVMSizeNode', 'MaxVMSizeTask',
-    'MinCPU', 'MinCPUNode', 'MinCPUTask', 'NCPUS', 'NNodes', 'NodeList',
-    'NTasks', 'Priority', 'Partition', 'QOS', 'QOSRAW', 'ReqCPUFreq',
-    'ReqCPUFreqMin', 'ReqCPUFreqMax', 'ReqCPUFreqGov', 'ReqCPUS',
-    'ReqGRES', 'ReqMem', 'ReqNodes', 'ReqTRES', 'Reservation',
-    'ReservationId', 'Reserved', 'ResvCPU', 'ResvCPURAW', 'Start', 'State',
-    'Submit', 'Suspended', 'SystemCPU', 'Timelimit', 'TotalCPU', 'UID', 'User',
-    'UserCPU', 'WCKey', 'WCKeyID'
-]
+from pysacct.settings import VALID_SACCT_FIELDS
 
 
 def validate_fields(obj, **kwargs):
@@ -77,7 +59,7 @@ class Job(object):
 
     # Fall back for a valid field that is empty
     def __getattr__(self, name):
-        if name.lower() in (field.lower() for field in
+        if name.lower().strip('_') in (field.lower() for field in
                    VALID_SACCT_FIELDS):
             return None
         raise ValueError('%s is not a valid field for a Job object' % name)
@@ -95,7 +77,7 @@ class Job(object):
 
     @jobid.deleter
     def jobid(self):
-        del self._jobid
+        delattr(self, '_jobid')
 
     @property
     def jobsteps(self):
